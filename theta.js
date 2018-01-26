@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+const chalk = require('chalk');
 console.log('This is Theta - A modern Javascript Test Runner');
 
 function initThetaGlobals(testsListToInit) {
@@ -23,9 +24,9 @@ function Theta (filesToRun) {
             tests.forEach(t => {
                 try {
                     t.test();
-                    console.log(`ok ${t.description}`);
+                    console.log(chalk.green(`ok ${t.description}`));
                 } catch(e) {
-                    console.log(`not ok ${t.description}`, e.stack);
+                    console.log(chalk.yellow(`not ok ${t.description}`), chalk.red(e.stack));
                 }
             })
         }

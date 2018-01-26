@@ -12,6 +12,7 @@
     "theta": "theta.js"
   },
   "dependencies": {
-    "chai": "^4.1.2"
+    "chai": "^4.1.2",
+    "chalk": "^2.3.0"
   }
 }
