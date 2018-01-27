@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+const filesResolver = require('./filesResolver');
 const chalk = require('chalk');
 const Suite = require('./suite');
 
@@ -36,5 +37,4 @@ function Theta (filesToRun) {
     };
 }
 
-const filesToRun = ['./examples/example.js'];
-Theta(filesToRun).run();
+Theta(filesResolver.resolveTestsToLoad()).run();
