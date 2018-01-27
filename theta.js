@@ -1,34 +1,35 @@
 #! /usr/bin/env node
 const chalk = require('chalk');
-console.log('This is Theta - A modern Javascript Test Runner');
+const Suite = require('./suite');
 
-function initThetaGlobals(testsListToInit) {
+function initThetaGlobals() {
     global.it = function(description, test) {
-        testsListToInit.push({description, test});
+        global.context.tests.push({description, test});
+    };
+
+    global.describe = function(description, suiteFunc) {
+        const suite = Suite(description, suiteFunc);
+        global.context.suites.push(suite);
+        suite.process();
     };
 }
 
 function Theta (filesToRun) {
     filesToRun = filesToRun || [];
     filesToRun = [].concat(filesToRun);
-    const tests = [];
 
-    initThetaGlobals(tests);
+    initThetaGlobals();
+
+    const runSpecs = function() {
+        filesToRun.forEach(require);
+    };
 
     return {
         run() {
-            console.log('running tests!', filesToRun);
-            filesToRun.forEach(file => {
-                require(file);
-            });
-            tests.forEach(t => {
-                try {
-                    t.test();
-                    console.log(chalk.green(`ok ${t.description}`));
-                } catch(e) {
-                    console.log(chalk.yellow(`not ok ${t.description}`), chalk.red(e.stack));
-                }
-            })
+            const root = Suite('', runSpecs);
+            console.log('+++ running tests! +++', filesToRun);
+            root.process();
+            root.run();
         }
     };
 }
