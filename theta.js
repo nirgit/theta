@@ -8,9 +8,11 @@ function initThetaGlobals() {
     };
 
     global.describe = function(description, suiteFunc) {
-        const suite = Suite(description, suiteFunc);
+        const currentSuite = global.context;
+        const suite = Suite(description, suiteFunc, currentSuite, currentSuite.depth + 1);
         global.context.suites.push(suite);
         suite.process();
+        global.context = currentSuite;
     };
 }
 
@@ -26,7 +28,7 @@ function Theta (filesToRun) {
 
     return {
         run() {
-            const root = Suite('', runSpecs);
+            const root = Suite('', runSpecs, null);
             console.log('+++ running tests! +++', filesToRun);
             root.process();
             root.run();

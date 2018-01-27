@@ -4,8 +4,10 @@ function setSuiteContext(suite) {
     global.context = suite;
 }
 
-function Suite (description, callback) {
+function Suite (description, callback, parentSuite, depth = 0) {
     const suitePrivates = {
+        depth,
+        parentSuite,
         tests: [],
         suites: []
     };
@@ -17,13 +19,14 @@ function Suite (description, callback) {
         },
 
         run() {
-            console.log(chalk.blue(description));
+            const spacer = Array(suitePrivates.depth).fill('   ').join('');
+            console.log(spacer, chalk.blue(description));
             suitePrivates.tests.forEach(t => {
                 try {
                     t.test();
-                    console.log(chalk.green(`ok ${t.description}`));
+                    console.log(spacer, chalk.green(`ok ${t.description}`));
                 } catch (e) {
-                    console.log(chalk.yellow(`not ok ${t.description}`), chalk.red(e.stack));
+                    console.log(spacer, chalk.yellow(`not ok ${t.description}`), chalk.red(e.stack));
                 }
             });
             suitePrivates.suites.forEach(s => {
